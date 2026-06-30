@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Chat Booking UI</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Rubik', sans-serif;
+      background: #fafafa;
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+    }
+
+    /* Background */
+    .left-shape {
+      position: absolute;
+      top: 0;
+      left: -120px;
+      width: 420px;
+      height: 700px;
+      background: linear-gradient(180deg, #e942ff, #8838ff);
+      border-radius: 0 0 220px 220px;
+      z-index: 0;
+    }
+
+    .right-shape {
+      position: absolute;
+      right: -180px;
+      bottom: -150px;
+      width: 420px;
+      height: 700px;
+      background: #f3f0f7;
+      border-radius: 220px 220px 0 0;
+      z-index: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 120px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* PHONE */
+    .phone {
+      width: 300px;
+      background: #fff;
+      border-radius: 35px;
+      padding: 14px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+      position: relative;
+    }
+
+    .notch {
+      width: 150px;
+      height: 28px;
+      background: #fff;
+      border-radius: 0 0 18px 18px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+
+    .screen {
+      border-radius: 28px;
+      overflow: hidden;
+      background: #f5f3f7;
+      height: 620px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(90deg, #8838ff, #e942ff);
+      padding: 40px 18px 18px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      object-fit: cover;
+    }
+
+    .user-info h4 {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .user-info p {
+      font-size: 10px;
+      opacity: .8;
+    }
+
+    .icon {
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* Chat */
+    .chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scroll-behavior: smooth;
+    }
+
+    .chat::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .chat::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 10px;
+    }
+
+    .message {
+      max-width: 75%;
+      padding: 10px 12px;
+      font-size: 11px;
+      line-height: 1.5;
+      border-radius: 14px;
+      animation: fadeIn .3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .left {
+      background: #ede5f4;
+      color: #9241c8;
+      border-bottom-left-radius: 4px;
+      align-self: flex-start;
+    }
+
+    .right {
+      background: #fff;
+      color: #6e5d7e;
+      border-bottom-right-radius: 4px;
+      align-self: flex-end;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Typing */
+    .typing {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      padding: 10px 14px;
+      width: 60px;
+    }
+
+    .typing span {
+      width: 6px;
+      height: 6px;
+      background: #9241c8;
+      border-radius: 50%;
+      animation: bounce 1s infinite;
+    }
+
+    .typing span:nth-child(2) {
+      animation-delay: .2s;
+    }
+
+    .typing span:nth-child(3) {
+      animation-delay: .4s;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0);
+      }
+
+      40% {
+        transform: scale(1);
+      }
+    }
+
+    /* Input */
+    .input-area {
+      background: #fff;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-top: 1px solid #eee;
+    }
+
+    .input-area input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: #f5f3f7;
+      padding: 14px;
+      border-radius: 30px;
+      font-size: 12px;
+      color: #555;
+    }
+
+    .send-btn {
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 50%;
+      background: #3e2753;
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+      transition: .3s;
+    }
+
+    .send-btn:hover {
+      transform: scale(1.08);
+    }
+
+    /* CONTENT */
+    .content {
+      max-width: 450px;
+    }
+
+    .content h1 {
+      font-size: 52px;
+      color: #3e2753;
+      margin-bottom: 25px;
+      font-weight: 500;
+    }
+
+    .content p {
+      color: #a39daa;
+      line-height: 1.9;
+      font-size: 18px;
+    }
+
+    /* Mobile */
+    @media(max-width:900px) {
+
+      .container {
+        flex-direction: column;
+        gap: 60px;
+        text-align: center;
+      }
+
+      .content {
+        max-width: 340px;
+      }
+
+      .content h1 {
+        font-size: 38px;
+      }
+
+      .content p {
+        font-size: 15px;
+      }
+
+      .phone {
+        width: 260px;
+      }
+
+      .screen {
+        height: 560px;
+      }
+
+      .left-shape {
+        width: 320px;
+        height: 520px;
+        left: -180px;
+      }
+
+      .right-shape {
+        width: 260px;
+        height: 400px;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Background -->
+  <div class="left-shape"></div>
+  <div class="right-shape"></div>
+
+  <div class="container">
+
+    <!-- Phone -->
+    <div class="phone">
+
+      <div class="notch"></div>
+
+      <div class="screen">
+
+        <!-- Header -->
+        <div class="header">
+
+          <div class="header-left">
+
+            <span class="icon">&#8249;</span>
+
+            <img class="avatar" src="images/avatar.jpg" alt="">
+
+            <div class="user-info">
+              <h4>AI Assistant</h4>
+              <p>Online</p>
+            </div>
+
+          </div>
+
+          <span class="icon">&#8942;</span>
+
+        </div>
+
+        <!-- Chat -->
+        <div class="chat" id="chat">
+
+          <div class="message left">
+            👋 Hello! I'm your AI booking assistant.
+          </div>
+
+          <div class="message left">
+            Ask me anything about dog walking 🐶
+          </div>
+
+        </div>
+
+        <!-- Input -->
+        <div class="input-area">
+
+          <input type="text" id="messageInput" placeholder="Type a message...">
+
+          <button class="send-btn" id="sendBtn">
+            ➤
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <h1>Simple booking</h1>
+
+      <p>
+        Stay in touch with our AI dog walking assistant through the chat interface.
+        Discuss arrangements, ask questions, and make bookings instantly with smart AI responses.
+      </p>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    // AI Responses
+    const aiReplies = {
+      hello: "Hello 👋 How can I help you today?",
+      hi: "Hi there 😊 Need help booking a dog walk?",
+      price: "🐶 30 minute walk is $29 and 1 hour walk is $49.",
+      book: "📅 Sure! What day would you like to schedule the walk?",
+      thanks: "You're welcome 💜",
+      dog: "Aww 🐕 What breed is your dog?",
+      germanshepard: "They Are The Most Easiest Dogs To Control",
+      default: "🤖 I'm still learning. Can you tell me more?"
+    };
+
+    // Create Message
+    function createMessage(text, type) {
+
+      const message = document.createElement("div");
+
+      message.classList.add("message", type);
+
+      message.innerHTML = text;
+
+      chat.appendChild(message);
+
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    // Typing Animation
+    function showTyping() {
+
+      const typing = document.createElement("div");
+
+      typing.classList.add("message", "left", "typing");
+
+      typing.id = "typing";
+
+      typing.innerHTML = `
+        <span></span>
+        <span></span>
+        <span></span>
+      `;
+
+      chat.appendChild(typing);
+
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function removeTyping() {
+
+      const typing = document.getElementById("typing");
+
+      if (typing) {
+        typing.remove();
+      }
+    }
+
+    // AI Logic
+    function getAIResponse(message) {
+
+      const text = message.toLowerCase();
+
+      if (text.includes("hello")) return aiReplies.hello;
+      if (text.includes("hi")) return aiReplies.hi;
+      if (text.includes("price")) return aiReplies.price;
+      if (text.includes("book")) return aiReplies.book;
+      if (text.includes("thank")) return aiReplies.thanks;
+      if (text.includes("dog")) return aiReplies.dog;
+      if (text.includes("germanshepard")) return aiReplies.germanshepard;
+
+      return aiReplies.default;
+    }
+
+    // Send Message
+    function sendMessage() {
+
+      const text = input.value.trim();
+
+      if (text === "") return;
+
+      createMessage(text, "right");
+
+      input.value = "";
+
+      showTyping();
+
+      setTimeout(() => {
+
+        removeTyping();
+
+        const response = getAIResponse(text);
+
+        createMessage(response, "left");
+
+      }, 1200);
+
+    }
+
+    // Events
+    sendBtn.addEventListener("click", sendMessage);
+
+    input.addEventListener("keypress", function (e) {
+
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+
+    });
+
+  </script>
+
+</body>
+
+</html>
