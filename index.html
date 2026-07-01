@@ -26,7 +26,33 @@
       justify-content: center;
       padding: 40px 20px;
       position: relative;
+  line-height: 1.6;
+  letter-spacing: 0.2px;
+
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
     }
+h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
+    body::before {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: linear-gradient(
+    135deg,
+    hsl(293, 100%, 63%),
+    hsl(264, 100%, 61%)
+  );
+  filter: blur(40px);
+  border-radius: 50%;
+  top: -200px;
+  left: -150px;
+  opacity: .6;
+}
 
     /* Background */
     .left-shape {
@@ -61,6 +87,11 @@
       position: relative;
       z-index: 2;
     }
+    .phone {
+ 
+}
+
+
 
     /* PHONE */
     .phone {
@@ -70,7 +101,22 @@
       padding: 14px;
       box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
       position: relative;
+  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.95);
+   animation:
+    floatIn 1s ease forwards,
+    idleFloat 4s ease-in-out infinite 1s;
     }
+
+    @keyframes idleFloat {
+  0%,100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
 
     .notch {
       width: 150px;
@@ -322,6 +368,16 @@
       }
 
     }
+
+    button:hover,
+.send-btn:hover {
+  transform: scale(1.05);
+  transition: .3s ease;
+}
+
+.dog-image:hover {
+  transform: scale(1.08);
+}
   </style>
 </head>
 
